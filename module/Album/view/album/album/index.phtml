@@ -1,0 +1,99 @@
+<?php
+ // module/Album/view/album/album/index.phtml:
+
+ $title = 'Classes List';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <!--<p>
+     <a href="<?php echo $this->url('album', array('action'=>'add'));?>">Add new Class</a>
+ </p>-->
+<p>
+<button type="button" href="<?php echo $this->url('album', array('action'=>'add'));?>" class="btn btn-info btn-lg addClassBtn" >Add new Class</button>
+</p>
+
+ <table class="table">
+ <tr>
+     <th>Name</th>
+     <th>&nbsp;</th>
+ </tr>
+ <?php foreach ($this->paginator as $album) : ?>
+ <tr>
+     <td><?php echo $this->escapeHtml($album->name);?></td>
+     <td>
+        <!-- <a href="<?php echo $this->url('album', array('action'=>'edit', 'id' => $album->id));?>" data-toggle="modal" data-target="#myModal2">Edit</a>-->
+         <button type="button" class="btn btn-info btn-lg editClassBtn btn-sm" href="<?php echo $this->url('album',array('action'=>'edit', 'id' => $album->id));?>" >Edit</button>
+         <a href="<?php echo $this->url('album',
+             array('action'=>'delete', 'id' => $album->id));?>">Delete</a>
+         <button type="button" class="btn btn-info btn-lg showStudentsBtn btn-sm" href="<?php echo $this->url('album',
+             array('action'=>'show', 'id' => $album->name));?>" >Show</button>
+         <!--<a href="<?php echo $this->url('album',
+             array('action'=>'show', 'id' => $album->name));?>">Show</a>-->
+     </td>
+ </tr>
+<?php endforeach; ?>
+</table>
+<?php
+    // add at the end of the file after the table
+    echo $this->paginationControl(
+     // the paginator object
+     $this->paginator,
+     // the scrolling style
+     'sliding',
+     // the partial to use to render the control
+     'partial/paginator2.phtml',
+     // the route to link to when a user clicks a control link
+     array(
+         'route' => 'album'
+     )
+    );
+?>
+
+<script>
+    
+$(function(){
+     $(".addClassBtn").click(function(){
+        var url = $(this).attr('href');
+        $('.modal-body').load(url,function(result){
+            $('#myModal3').modal({show:true});
+        });
+     });
+    
+     $(".editClassBtn").click(function(){
+        var url = $(this).attr('href');
+        $('.modal-body').load(url,function(result){
+            $('#myModal3').modal({show:true});
+        });
+     });
+    
+     $(".showStudentsBtn").click(function(){
+        var url = $(this).attr('href');
+        $('.modal-body').load(url,function(result){
+            $('#myModal3').modal({show:true});
+        });
+     });
+});
+
+</script>
+
+
+
+<div id="myModal3" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+    
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

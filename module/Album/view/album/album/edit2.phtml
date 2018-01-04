@@ -1,0 +1,35 @@
+<?php
+ // module/Album/view/album/album/edit.phtml:
+
+ $title = 'Edit Student';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+ <?php
+ $form = $this->form;
+ $form->setAttribute('action', $this->url(
+     'album',
+     array(
+         'action' => 'edit2',
+         'id'     => $this->id,
+     )
+ ));
+ $form->prepare();
+
+ echo $this->form()->openTag($form);
+ echo $this->formHidden($form->get('id'));
+ echo $this->formRow($form->get('name'));
+?>
+<br>
+<?php
+ echo $this->formRow($form->get('classs'));
+?>
+<br>
+<?php
+ echo $this->formRow($form->get('email'));
+?>
+<br>
+<?php
+ echo $this->formSubmit($form->get('submit'));
+ echo $this->form()->closeTag();

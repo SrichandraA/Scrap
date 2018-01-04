@@ -1,0 +1,96 @@
+<?php
+ // module/Album/view/album/album/index.phtml:
+
+ $title = 'Students List';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <!--<p>
+     <a href="<?php echo $this->url('album', array('action'=>'add2'));?>">Add new Student</a>
+ </p>-->
+ <p>
+     <button type="button" href="<?php echo $this->url('album', array('action'=>'add2'));?>" class="btn btn-info btn-lg addStudentModal" data-toggle="modal" data-target="#myModal4">Add new Student</button>
+ </p>
+
+ <style>
+    .tableDimensions{
+        width: 500px;
+    }
+
+ </style>
+
+ <table class="table tableDimensions">
+     <tr>
+         <th>Name</th>
+        <th>Class</th>
+         <th>Email</th>
+         <th>&nbsp;</th>
+     </tr>
+     <?php foreach ($this->paginator as $album) : ?>
+         <tr>
+             <td><?php echo $this->escapeHtml($album->name);?></td>
+             <td><?php echo $this->escapeHtml($album->classs);?></td>
+             <td><?php echo $this->escapeHtml($album->email);?></td>
+             <td>
+                <!-- <a href="<?php echo $this->url('album',
+                     array('action'=>'edit2', 'id' => $album->id));?>" data-toggle="modal" data-target="#myModal2">Edit</a>-->
+                 <button type="button" class="btn btn-info btn-lg editStudentBtn btn-sm" href="<?php echo $this->url('album',array('action'=>'edit2', 'id' => $album->id));?>" >Edit</button>
+                 <a href="<?php echo $this->url('album',
+                     array('action'=>'delete2', 'id' => $album->id));?>">Delete</a>
+             </td>
+         </tr>
+     <?php endforeach; ?>
+ </table>
+
+ <?php
+ // add at the end of the file after the table
+ echo $this->paginationControl(
+     // the paginator object
+     $this->paginator,
+     // the scrolling style
+     'sliding',
+     // the partial to use to render the control
+     'partial/paginator.phtml',
+     // the route to link to when a user clicks a control link
+     array(
+         'route' => 'album'
+     )
+  );
+ ?>
+
+<script>
+$(function(){
+    
+    $(".addStudentModal").click(function(){
+        var url = $(this).attr('href');
+        $('.modal-body').load(url,function(result){
+            $('#myModal3').modal({show:true});
+        });        
+    });
+    
+    $(".editStudentBtn").click(function(){
+        
+    /*  $.ajax({
+        url: $(this).attr('href') ,
+        type: 'GET',
+        success: function (data) {
+     
+            $("#myModal2").modal('show');
+            console.log(data);
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
+    });*/
+       
+         var url = $(this).attr('href');
+         $('.modal-body').load(url,function(result){
+             $('#myModal3').modal({show:true});
+         });
+    });
+});
+
+</script>
+
+
+
