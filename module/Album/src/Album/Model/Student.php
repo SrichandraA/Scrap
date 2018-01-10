@@ -20,6 +20,8 @@ namespace Album\Model;
          $this->name = (isset($data['name'])) ? $data['name'] : null;
          $this->classs = (isset($data['classs'])) ? $data['classs'] : null;
          $this->email = (isset($data['email'])) ? $data['email'] : null;
+        $this->pid = (isset($data['pid'])) ? $data['pid'] : null;
+
 
      }
      public function getArrayCopy()
@@ -82,24 +84,33 @@ namespace Album\Model;
              ));
                      $inputFilter->add(array(
                  'name'     => 'email',
-                 'required' => true,
+                'required' => true,
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                  'validators' => array(
                      array(
-                         'name'    => 'StringLength',
+                         'name'    => 'EmailAddress',
+                         
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 1,
-                             'max'      => 100,
+                             'max'      => 20,
+                             'message' => 'Invalid Email Address !',
+                             
                          ),
                      ),
                  ),
              ));
 
-    
+             $inputFilter->add(array(
+                 'name'     => 'pid',
+                 'required' => true,
+                 'filters'  => array(
+                     array('name' => 'Int'),
+                 ),
+             ));
              $this->inputFilter = $inputFilter;
          }
 

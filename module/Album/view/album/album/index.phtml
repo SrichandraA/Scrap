@@ -1,82 +1,233 @@
-<?php
- // module/Album/view/album/album/index.phtml:
 
- $title = 'Classes List';
- $this->headTitle($title);
- ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
- <!--<p>
-     <a href="<?php echo $this->url('album', array('action'=>'add'));?>">Add new Class</a>
- </p>-->
+ <h1>Classes List</h1>
+
 <p>
-<button type="button" href="<?php echo $this->url('album', array('action'=>'add'));?>" class="btn btn-info btn-lg addClassBtn" >Add new Class</button>
+<button type="button" value="/gum/public//add"  class="btn btn-info btn-lg addClass" >Add new Class</button>
 </p>
+<!-- <p>
+<button type="button"  class="btn btn-info btn-sm list" >Show</button>
+</p> -->
 
  <table class="table">
  <tr>
      <th>Name</th>
-     <th>&nbsp;</th>
+     <th>Edit</th>
+     <th>Delete</th>
+     <th>Show</th>
+
  </tr>
- <?php foreach ($this->paginator as $album) : ?>
- <tr>
-     <td><?php echo $this->escapeHtml($album->name);?></td>
-     <td>
-        <!-- <a href="<?php echo $this->url('album', array('action'=>'edit', 'id' => $album->id));?>" data-toggle="modal" data-target="#myModal2">Edit</a>-->
-         <button type="button" class="btn btn-info btn-lg editClassBtn btn-sm" href="<?php echo $this->url('album',array('action'=>'edit', 'id' => $album->id));?>" >Edit</button>
-         <a href="<?php echo $this->url('album',
-             array('action'=>'delete', 'id' => $album->id));?>">Delete</a>
-         <button type="button" class="btn btn-info btn-lg showStudentsBtn btn-sm" href="<?php echo $this->url('album',
-             array('action'=>'show', 'id' => $album->name));?>" >Show</button>
-         <!--<a href="<?php echo $this->url('album',
-             array('action'=>'show', 'id' => $album->name));?>">Show</a>-->
-     </td>
- </tr>
-<?php endforeach; ?>
+ <tbody class="tableContent"> </tbody>
+
 </table>
-<?php
-    // add at the end of the file after the table
-    echo $this->paginationControl(
-     // the paginator object
-     $this->paginator,
-     // the scrolling style
-     'sliding',
-     // the partial to use to render the control
-     'partial/paginator2.phtml',
-     // the route to link to when a user clicks a control link
-     array(
-         'route' => 'album'
-     )
-    );
-?>
+
 
 <script>
-    
 $(function(){
-     $(".addClassBtn").click(function(){
-        var url = $(this).attr('href');
-        $('.modal-body').load(url,function(result){
-            $('#myModal3').modal({show:true});
+  $("body").on("click","#editClassFormBtn",function(e){
+    e.preventDefault();
+    var name=JSON.stringify($("#editClassForm").serializeArray()[1].value);
+    name = name.replace("\"", "");
+    name = name.replace("\"", "");
+        var id=JSON.stringify($("#editClassForm").serializeArray()[0].value);
+        id = id.replace("\"", "");
+        id = id.replace("\"", "");
+  console.log(JSON.stringify($("#editClassForm").serializeArray()[1].value));
+    $.ajax({
+                     url:"/gum/public/album-rest/"+id,
+                     type: 'PUT',
+
+                     data: {'name':name},
+                     success: function (data) {
+                    //   $('#myModal3').modal('show')
+                    //   $('.modal.in').removeClass('in');
+
+                    //    console.log(JSON.stringify(data.data));
+                      //  if(JSON.stringify(data.data)=="0"){
+                          //alert("class exists");
+                        // }
+                        // else {
+                        //
+                        //   myFunction();
+                        //
+                        // }
+
+                     },
+                     error: function (e) {
+                       myFunction();
+                       $('.modal.in').removeClass('in');
+
+                         console.log(e);
+
+                     }
+
+  });
+
+  });
+
+
+  $("body").on("click","#addClassFormBtn",function(e){
+    e.preventDefault();
+    var name=JSON.stringify($("#form").serializeArray()[1].value);
+    name = name.replace("\"", "");
+    name = name.replace("\"", "");
+
+console.log(name);
+  console.log(JSON.stringify($("#form").serializeArray()[1].value));
+   $.ajax({
+                     url:"/gum/public/album-rest",
+                     type: 'POST',
+
+                     data: {'name':name},
+                     success: function (data) {
+                    //   $('#myModal3').modal('show')
+                    $('.modal.in').removeClass('in');
+
+                        console.log(JSON.stringify(data.data));
+                        if(JSON.stringify(data.data)=="0"){
+                          //alert("class exists");
+                          myFunction();
+                        }
+                        else {
+
+                          myFunction();
+
+                        }
+
+                     },
+                     error: function (e) {
+                         console.log(e);
+
+                     }
+
+  });
+
+  });
+
+
+
+
+        $("body").on("click",'.deleteClass',function(){
+
+          $.ajax({
+                url: '/gum/public/album-rest/'+$(this).attr('value'),
+                // dataType: "jsonp",
+                type: 'DELETE',
+                success: function (data) {
+                  console.log(JSON.stringify(data));
+                  alert((JSON.stringify(data)));
+                  myFunction();
+
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error.message);
+                },
+            });
+
         });
-     });
-    
-     $(".editClassBtn").click(function(){
-        var url = $(this).attr('href');
-        $('.modal-body').load(url,function(result){
-            $('#myModal3').modal({show:true});
+      //  $(".list").click(function(){
+        $.ajax({
+        url: '/gum/public/album-rest',
+        // dataType: "jsonp",
+        type: 'GET',
+               dataType: "json",
+        success: function (data) {
+         data=JSON.stringify(data);
+         var obj=JSON.parse(data);
+         $(".tableContent").html('');
+         for(var i=0; i<obj.data.length; i++){
+
+           $(".tableContent").append("<tr><td>"+ obj.data[i].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[i].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[i].id+">Show</button></td></tr>");
+
+         }
+            console.log("Data:"+((obj.data.length)));
+            console.log("grtList");
+
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
         });
-     });
-    
-     $(".showStudentsBtn").click(function(){
-        var url = $(this).attr('href');
-        $('.modal-body').load(url,function(result){
-            $('#myModal3').modal({show:true});
+    //    });
+
+
+        function myFunction() {
+          $.ajax({
+          url: '/gum/public/album-rest',
+          // dataType: "jsonp",
+          type: 'GET',
+                 dataType: "json",
+          success: function (data) {
+           data=JSON.stringify(data);
+           var obj=JSON.parse(data);
+           $(".tableContent").html('');
+           for(var i=0; i<obj.data.length; i++){
+
+             $(".tableContent").append("<tr><td>"+ obj.data[i].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm deleteClass' value="+obj.data[i].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[i].id+">Show</button></td></tr>");
+
+           }
+              console.log("Data:"+((obj.data.length)));
+          },
+          error: function (xhr, status, error) {
+              console.log('Error: ' + error.message);
+          },
+          });
+
+
+
+        }
+
+
+        $("body").on("click",".editClass",function(){
+        console.log("show button");
+        if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+          // $('#myModal3').find('.modal-body').html("");
+          $('.modal.in').removeClass("in");
+
+          $('#myModal3').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
+        }else{
+        $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
+        }
+
+
         });
-     });
+
+
+      $("body").on("click",".showClass",function(){
+      console.log("show button");
+      if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+        // $('#myModal3').find('.modal-body').html("");
+        $('.modal.in').removeClass("in");
+
+        $('#myModal3').find('.modal-body').load('/gum/public//show/'+$(this).attr('value'));
+      }else{
+      $('#myModal3').modal('show').find('.modal-body').load('/gum/public//show/'+$(this).attr('value'));
+      }
+
+
+      });
+
+
+      $(".addClass").on("click",function(e){
+
+      e.preventDefault();
+      console.log("add class");
+      if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+        $('.modal.in').removeClass("in");
+
+        $('#myModal3').find('.modal-body').load($(this).attr('value'));
+      }else{
+        $('#myModal3').modal('show').find('.modal-body').load($(this).attr('value'));
+
+      }
+
+
+      });
+
+
 });
 
 </script>
-
-
 
 <div id="myModal3" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -88,11 +239,11 @@ $(function(){
         <h4 class="modal-title">Modal Header</h4>
       </div>
       <div class="modal-body">
-    
-        
+
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="closeModal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

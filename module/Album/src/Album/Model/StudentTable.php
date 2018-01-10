@@ -14,12 +14,17 @@ use Zend\Db\Adapter\Adapter;
 class StudentTable extends AbstractTableGateway
 {
     protected $tableGateway;
-    
+
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
     }
+    public function fetchAll()
+    {
 
+        $resultSet = $this->tableGateway->select();
+        return $resultSet;
+    }
     public function getStudents($id)
     {
                      //$resultSet = $this->tableGateway->select(array('classs' => 'class1'));
@@ -34,7 +39,7 @@ class StudentTable extends AbstractTableGateway
         $sql = new Sql( $this->tableGateway->getAdapter());
         $select = $sql->select();
         $select->from('students');
-        $select->where(array('classs' => $id));
+        $select->where(array('pid' => $id));
              // create a new result set based on the Album entity
         $resultSetPrototype = new ResultSet();
         $resultSetPrototype->setArrayObjectPrototype(new Student());
@@ -49,17 +54,19 @@ class StudentTable extends AbstractTableGateway
         );
         $paginator = new Paginator($paginatorAdapter);
         return $paginator;
-         
+
          //return $results;
-        
+
      }
-    
+
      public function saveStudent(Student $student)
      {
          $data = array(
              'name' => $student->name,
              'classs' => $student->classs,
              'email' => $student->email,
+             'pid' => $student->pid,
+
          );
 
          $id = (int) $student->id;
@@ -73,7 +80,7 @@ class StudentTable extends AbstractTableGateway
              }
          }
      }
-    
+
      public function getStudentById($id)
      {
          $id  = (int) $id;
@@ -84,7 +91,7 @@ class StudentTable extends AbstractTableGateway
          }
          return $row;
      }
-    
+
      public function deleteStudent($id)
      {
          $this->tableGateway->delete(array('id' => (int) $id));

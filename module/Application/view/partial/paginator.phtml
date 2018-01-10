@@ -1,10 +1,11 @@
 <?php if ($this->pageCount): ?>
-     <div>
+
+     <div >
          <ul class="pagination">
              <!-- Previous page link -->
              <?php if (isset($this->previous)): ?>
                  <li>
-                     <a href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE); ?>?page=<?php echo $this->previous; ?>">
+                     <a  href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE); ?>?page=<?php echo $this->previous; ?>" class="pager">
                          <<
                      </a>
                  </li>
@@ -20,7 +21,7 @@
              <?php foreach ($this->pagesInRange as $page): ?>
                  <?php if ($page != $this->current): ?>
                      <li>
-                         <a href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE);?>?page=<?php echo $page; ?>">
+                         <a  href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE);?>?page=<?php echo $page; ?>" class="pager">
                              <?php echo $page; ?>
                          </a>
                      </li>
@@ -34,7 +35,7 @@
              <!-- Next page link -->
              <?php if (isset($this->next)): ?>
                  <li>
-                     <a href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE); ?>?page=<?php echo $this->next; ?>">
+                     <a  href="<?php echo $this->url($this->route, array('page' => $this->first), FALSE, TRUE); ?>?page=<?php echo $this->next; ?>" class="pager">
                          >>
                      </a>
                  </li>
@@ -52,12 +53,22 @@
 <script>
 
 $(function(){
-    $("a").click(function(e){
+    $("a.pager").click(function(e){
         e.preventDefault() ;
-        var url = $(this).attr('href');
-        $('.modal-body').load(url,function(result){
-            $('#myModal3').modal({show:true});
-        });
+              $.ajax({
+        url: $(this).attr('href'),
+        type: 'GET',
+        success: function (data) {
+     
+    $('#myModal3').find('.modal-body').html(data);
+                        $('#myModal3').modal({show:true});
+
+            
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
+    });
     });
 });
 

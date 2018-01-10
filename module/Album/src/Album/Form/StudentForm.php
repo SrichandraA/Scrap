@@ -23,10 +23,7 @@ namespace Album\Form;
          ));
        $this->add(array(
              'name' => 'classs',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Class',
-             ),
+            'type' => 'Hidden',
          ));
             $this->add(array(
              'name' => 'email',
@@ -34,6 +31,10 @@ namespace Album\Form;
              'options' => array(
                  'label' => 'Email',
              ),
+         ));
+          $this->add(array(
+             'name' => 'pid',
+             'type' => 'Hidden',
          ));
          $this->add(array(
              'name' => 'submit',

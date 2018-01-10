@@ -8,17 +8,22 @@
 
  <?php
  $form = $this->form;
- $form->setAttribute('action', $this->url(
+ /*$form->setAttribute('action', $this->url(
      'album',
      array(
          'action' => 'edit',
          'id'     => $this->id,
      )
- ));
+ ));*/
+ $form->setAttribute('id','editClassForm');
+
  $form->prepare();
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
  echo $this->formRow($form->get('name'));
- echo $this->formSubmit($form->get('submit'));
+ //echo $this->formSubmit($form->get('submit'));
+ ?>
+<button type="button" id="editClassFormBtn" class="btn btn-info btn-sm" >Edit </button><?php
+
  echo $this->form()->closeTag();

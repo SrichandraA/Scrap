@@ -1,4 +1,4 @@
-	
+
  <?php
  // module/Album/view/album/album/add.phtml:
 
@@ -7,16 +7,19 @@
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
  <?php
- $form->setAttribute('action', $this->url('album', array('action' => 'add2')));
+ //$form->setAttribute('action', $this->url('album', array('action' => 'add2')));
+ $form->setAttribute('id','addStudentFormId');
  $form->prepare();
 
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
+ echo $this->formHidden($form->get('pid')->setValue($id));
+
  echo $this->formRow($form->get('name'));
  ?>
  <br>
  <?php
- echo $this->formRow($form->get('classs'));
+ echo $this->formHidden($form->get('classs')->setValue('null'));
  ?>
  <br>
  <?php
@@ -24,5 +27,8 @@
  ?>
  <br>
  <?php
- echo $this->formSubmit($form->get('submit'));
+ //echo $this->formSubmit($form->get('submit'));
+ ?>
+<button type="button" id="addStudentFormBtn" class="btn btn-info btn-sm" >Add </button><?php
+
  echo $this->form()->closeTag();
