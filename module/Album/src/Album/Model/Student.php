@@ -12,7 +12,7 @@ namespace Album\Model;
      public $name;
      public $classs;
      public $email;
-     protected $inputFilter;                      
+     protected $inputFilter;
 
      public function exchangeArray($data)
      {
@@ -92,13 +92,13 @@ namespace Album\Model;
                  'validators' => array(
                      array(
                          'name'    => 'EmailAddress',
-                         
+
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 1,
                              'max'      => 20,
                              'message' => 'Invalid Email Address !',
-                             
+
                          ),
                      ),
                  ),

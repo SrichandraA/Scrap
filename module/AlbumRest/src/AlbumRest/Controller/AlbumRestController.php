@@ -50,15 +50,19 @@ public function create($data)
   if($this->getAlbumTable()->getAlbumByName($album->name)){
 
           $this->getAlbumTable()->saveAlbum($album);
-          return new JsonModel(array('data' => '1'));
+          return new JsonModel(array('data' => 'Saved Successfully !'));
 
 }
 
 
    else{
-     return new JsonModel(array('data' => '0'));
+     return new JsonModel(array('data' => 'User Exists !'));
    }
 
+
+}
+else{
+  return new JsonModel(array('data' => 'Please Enter Your Name'));
 
 }
 }
@@ -72,11 +76,21 @@ public function update($id, $data)
   $form->setInputFilter($album->getInputFilter());
   $form->setData($data);
   if ($form->isValid()) {
-      $id = $this->getAlbumTable()->saveAlbum($form->getData());
+    if($this->getAlbumTable()->getAlbumByName($album->name)){
+
+            $this->getAlbumTable()->saveAlbum($album);
+            return new JsonModel(array('data' => 'Updated Successfully !'));
+
   }
 
+
+     else{
+       return new JsonModel(array('data' => 'User Exists !'));
+     }
+   }
+
   return new JsonModel(array(
-      'data' => $this->get($id),
+      'data' => 'Updated Successfully !',
   ));
 }
 

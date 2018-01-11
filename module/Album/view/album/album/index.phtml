@@ -50,11 +50,12 @@ $(function(){
                         //   myFunction();
                         //
                         // }
+                        myFunction();
+                       // $('.modal.in').removeClass('in');
+                         $("#myModal3").find(".modal-body").html(data.data);
 
                      },
                      error: function (e) {
-                       myFunction();
-                       $('.modal.in').removeClass('in');
 
                          console.log(e);
 
@@ -80,18 +81,14 @@ console.log(name);
                      data: {'name':name},
                      success: function (data) {
                     //   $('#myModal3').modal('show')
-                    $('.modal.in').removeClass('in');
+                  //  $('.modal.in').removeClass('in');
 
                         console.log(JSON.stringify(data.data));
-                        if(JSON.stringify(data.data)=="0"){
+                        $('#myModal3').find('.modal-body').html(data.data);
                           //alert("class exists");
                           myFunction();
-                        }
-                        else {
 
-                          myFunction();
 
-                        }
 
                      },
                      error: function (e) {
@@ -114,8 +111,9 @@ console.log(name);
                 type: 'DELETE',
                 success: function (data) {
                   console.log(JSON.stringify(data));
-                  alert((JSON.stringify(data)));
+                  //alert((JSON.stringify(data)));
                   myFunction();
+                  $("#myModal3").modal('show').find(".modal-body").html(data.data);
 
                 },
                 error: function (xhr, status, error) {

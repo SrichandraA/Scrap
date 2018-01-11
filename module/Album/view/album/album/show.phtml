@@ -28,8 +28,10 @@ var variableId =<?php echo $id; ?>;
 console.log(variableId);
 
 
-$("body").one("click","#editStudentFormBtn",function(e){
+$("body").on("click","#editStudentFormBtn",function(e){
   e.preventDefault();
+  e.stopImmediatePropagation();
+
   console.log(JSON.stringify($("#editStudentForm").serializeArray()));
   var name=JSON.stringify($("#editStudentForm").serializeArray()[3].value);
   name = name.replace("\"", "");
@@ -40,22 +42,35 @@ $("body").one("click","#editStudentFormBtn",function(e){
       var id=JSON.stringify($("#editStudentForm").serializeArray()[0].value);
       id = id.replace("\"", "");
       id = id.replace("\"", "");
+      var pid=JSON.stringify($("#editStudentForm").serializeArray()[1].value);
+      pid = pid.replace("\"", "");
+      pid = pid.replace("\"", "");
 console.log(name+email+id);
   $.ajax({
                    url:"/gum/public/student-rest/"+id,
                    type: 'PUT',
                    data: {
+                          'id':id,
                           'name': name,
                           'email': email,
                           'classs': '',
+                          'pid':pid,
                           },
                    success: function (data) {
-console.log((data));
+
+                     if(data.data=='0'){
+                       alert('Invalid Email !');
+                     }
+                     else {
+                       $("#myModal3").find(".modal-body").html(data.data);
+                        console.log((data));
+                     }
+
 
                    },
                    error: function (e) {
 
-                     $('.modal.in').removeClass('in');
+                     //$('.modal.in').removeClass('in');
 
                        console.log(e);
 
@@ -119,8 +134,9 @@ console.log((data));
   console.log("add student");
   $('#myModal3').modal('show').find('.modal-body').load('/gum/public//add2/'+variableId);
 
-  $("body").one("click","#addStudentFormBtn",function(e){
+  $("body").on("click","#addStudentFormBtn",function(e){
     e.preventDefault();
+    e.stopImmediatePropagation();
     var name=JSON.stringify($("#addStudentFormId").serializeArray()[2].value);
     name = name.replace("\"", "");
     name = name.replace("\"", "");
@@ -146,16 +162,16 @@ console.log((data));
                             },
                      success: function (data) {
                     //   $('#myModal3').modal('show')
-                    $('.modal.in').removeClass('in');
+                    //$('.modal.in').removeClass('in');
+                    if(data.data=='0'){
+                      alert("Invalid Email !");
+                    }
+                    else{
+                      $("#myModal3").find(".modal-body").html(data.data);
+                      console.log(JSON.stringify(data.data));
+                    }
 
-                        console.log(JSON.stringify(data.data));
-                        if(JSON.stringify(data.data)=="0"){
-                          //alert("class exists");
-                        }
-                        else {
 
-
-                        }
 
                      },
                      error: function (e) {
@@ -235,8 +251,9 @@ console.log((data));
               type: 'DELETE',
               success: function (data) {
                 console.log(JSON.stringify(data));
-                alert((JSON.stringify(data)));
-                $("#myModal3").removeClass('in');
+                $("#myModal3").find(".modal-body").html(data.data);
+              //  alert((JSON.stringify(data)));
+              //  $("#myModal3").removeClass('in');
               //  myFunction();
 
               },

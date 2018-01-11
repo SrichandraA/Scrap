@@ -80,7 +80,26 @@ class StudentTable extends AbstractTableGateway
              }
          }
      }
-
+     public function getStudentByEmail($email)
+     {
+         $rowset = $this->tableGateway->select(array('email' => $email));
+         $row = $rowset->current();
+         if (!$row) {
+             return true;
+         }
+         else
+         return false;
+     }
+     public function getStudentByName($name)
+     {
+         $rowset = $this->tableGateway->select(array('name' => $name));
+         $row = $rowset->current();
+         if (!$row) {
+             return true;
+         }
+         else
+         return false;
+     }
      public function getStudentById($id)
      {
          $id  = (int) $id;

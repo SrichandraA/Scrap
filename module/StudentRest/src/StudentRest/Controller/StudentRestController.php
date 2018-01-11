@@ -39,41 +39,60 @@ public function get($id)
   return array("data" => $student);
 }
 
-    public function create($data)
-    {
-       $student = new Student();
-       $student->exchangeArray($data);
+  public function create($data)
+  {
+      if($_POST['name']!='' && $_POST['email']!=''){
+        $email = ($_POST["email"]);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+          return new JsonModel(array('data' => '0'));
+        }
+        else{
+          $student = new Student();
+          $student->exchangeArray($data);
+          if(($this->getStudentTable()->getStudentByName($data['name']))&&($this->getStudentTable()->getStudentByEmail($data['email']))){
+            $this->getStudentTable()->saveStudent($student);
+               // print_r($_POST);
+               // exit;
+            return new JsonModel(array('data' => 'Saved Successfully !'));
+          }
+          else{
+            return new JsonModel(array('data' => 'Student Already Registered !'));
+          }
 
-              $this->getStudentTable()->saveStudent($student);
-              // print_r($_POST);
-              // exit;
-              return new JsonModel(array('data' => 'success'));
+        }
 
-
-
-
-
-
+       }
+       else{
+         return new JsonModel(array('data' => 'Please Enter Student Details !'));
+       }
     }
 
 
     public function update($id, $data)
 {
-  //  $data['id'] = $id;
-print_r($_PUT);
-  /*  $student = $this->getStudentTable()->getStudent($id);
-    $form  = new StudentForm();
-    $form->bind($student);
-    $form->setInputFilter($student->getInputFilter());
-    $form->setData($data);
-
-    if ($form->isValid()) {
-        $id = $this->getStudentTable()->saveStudent($form->getData());
+  if($data['name']!='' && $data['email']!=''){
+    $email = ($data["email"]);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      return new JsonModel(array('data' => '0'));
+    }
+    else{
+      $student = new Student();
+      $student->exchangeArray($data);
+      if(($this->getStudentTable()->getStudentByName($data['name']))||($this->getStudentTable()->getStudentByEmail($data['email']))){
+        $this->getStudentTable()->saveStudent($student);
+            // print_r($_POST);
+            // exit;
+        return new JsonModel(array('data' => 'Updated Successfully !'));
+      }
+      else{
+        return new JsonModel(array('data' => 'Student Already Registered !'));
+      }
     }
 
-    return new JsonModel(array(
-        'data' =>   'ss',
-    ));*/
+  }
+  else{
+    return new JsonModel(array('data' => 'Please Enter Student Details !'));
+  }
 }
 
     public function delete($id)
