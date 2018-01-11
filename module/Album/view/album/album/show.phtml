@@ -1,388 +1,204 @@
-
- <h1>Students List</h1>
-
- <p>
-     <button type="button" class="btn btn-info btn-lg addStudent" >Add new Student</button>
- </p>
-
-
-
- <table class="table">
-     <tr>
-         <th>Name</th>
-         <th>Email</th>
-         <th>Edit</th>
-         <th>Delete</th>
-
-     </tr>
-     <tbody class="studentTableContent"> </tbody>
-
-
- </table>
- <nav aria-label="...">
-   <ul class="paginationStudent">
-
-   </ul>
- </nav>
+<h1>Students List</h1>
+<p>
+  <button type="button" class="btn btn-info btn-lg addStudent" >Add new Student</button>
+</p>
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  <tbody class="studentTableContent"> </tbody>
+</table>
+<nav aria-label="...">
+  <ul class="paginationStudent">
+  </ul>
+</nav>
 
 <script>
+
 $(function(){
 
-var variableId =<?php echo $id; ?>;
-console.log(variableId);
-myFunction2(1);
+    var variableId =<?php echo $id; ?>;// variable to retrieve the id of class
+    console.log(variableId);
 
+    //Function for displaying the list of students
+    myFunction2(1);
 
-$("body").on("click","#editStudentFormBtn",function(e){
-  e.preventDefault();
-  e.stopImmediatePropagation();
-
-  console.log(JSON.stringify($("#editStudentForm").serializeArray()));
-  var name=JSON.stringify($("#editStudentForm").serializeArray()[3].value);
-  name = name.replace("\"", "");
-  name = name.replace("\"", "");
-  var email=JSON.stringify($("#editStudentForm").serializeArray()[4].value);
-  email = email.replace("\"", "");
-  email = email.replace("\"", "");
-      var id=JSON.stringify($("#editStudentForm").serializeArray()[0].value);
-      id = id.replace("\"", "");
-      id = id.replace("\"", "");
-      var pid=JSON.stringify($("#editStudentForm").serializeArray()[1].value);
-      pid = pid.replace("\"", "");
-      pid = pid.replace("\"", "");
-console.log(name+email+id);
-  $.ajax({
-                   url:"/gum/public/student-rest/"+id,
-                   type: 'PUT',
-                   data: {
-                          'id':id,
-                          'name': name,
-                          'email': email,
-                          'classs': '',
-                          'pid':pid,
-                          },
-                   success: function (data) {
-
-                     if(data.data=='0'){
-                       alert('Invalid Email !');
-                     }
-                     else {
-                       $("#myModal3").find(".modal-body").html(data.data);
-                        console.log((data));
-                     }
-
-
-                   },
-                   error: function (e) {
-
-                     //$('.modal.in').removeClass('in');
-
-                       console.log(e);
-
-                   }
-
-});
-
-});
-//
-// $("body").on("click","#addStudentFormBtn",function(e){
-//   e.preventDefault();
-//   var name=JSON.stringify($("#addStudentFormId").serializeArray()[3].value);
-//   name = name.replace("\"", "");
-//   name = name.replace("\"", "");
-//   var email=JSON.stringify($("#addStudentFormId").serializeArray()[4].value);
-//   email = email.replace("\"", "");
-//   email = email.replace("\"", "");
-//
-//       var pid=JSON.stringify($("#addStudentFormId").serializeArray()[1].value);
-//       pid = pid.replace("\"", "");
-//       pid = pid.replace("\"", "");
-// console.log(name);
-// console.log(JSON.stringify($("#addStudentFormId").serializeArray()));
-//  $.ajax({
-//                    url:"/gum/public/student-rest",
-//                    type: 'POST',
-//
-//                    data: {'id':'',
-//                           'pid':pid,
-//                           'classs':'',
-//                           'name':name,
-//                           'email':email,
-//
-//                           },
-//                    success: function (data) {
-//                   //   $('#myModal3').modal('show')
-//                   $('.modal.in').removeClass('in');
-//
-//                       console.log(JSON.stringify(data.data));
-//                       if(JSON.stringify(data.data)=="0"){
-//                         //alert("class exists");
-//                       }
-//                       else {
-//
-//
-//                       }
-//
-//                    },
-//                    error: function (e) {
-//                        console.log(e);
-//
-//                    }
-//
-// });
-//
-// });
-
-
-  $(".addStudent").one("click",function(e){
-  e.preventDefault();
-  console.log("add student");
-  $('#myModal3').modal('show').find('.modal-body').load('/gum/public//add2/'+variableId);
-
-  $("body").on("click","#addStudentFormBtn",function(e){
+    //Edit button in Edit 2 form for editing student
+    $("body").on("click","#editStudentFormBtn",function(e){
     e.preventDefault();
     e.stopImmediatePropagation();
-    var name=JSON.stringify($("#addStudentFormId").serializeArray()[2].value);
+    console.log(JSON.stringify($("#editStudentForm").serializeArray()));
+    var name=JSON.stringify($("#editStudentForm").serializeArray()[3].value);
     name = name.replace("\"", "");
     name = name.replace("\"", "");
-    var email=JSON.stringify($("#addStudentFormId").serializeArray()[4].value);
+    var email=JSON.stringify($("#editStudentForm").serializeArray()[4].value);
     email = email.replace("\"", "");
     email = email.replace("\"", "");
-
-        var pid=JSON.stringify($("#addStudentFormId").serializeArray()[1].value);
-        pid = pid.replace("\"", "");
-        pid = pid.replace("\"", "");
-  console.log(name);
-  console.log(JSON.stringify($("#addStudentFormId").serializeArray()));
-   $.ajax({
-                     url:"/gum/public/student-rest",
-                     type: 'POST',
-
-                     data: {'id':'',
-                            'pid':pid,
-                            'classs':'',
-                            'name':name,
-                            'email':email,
-
-                            },
-                     success: function (data) {
-                    //   $('#myModal3').modal('show')
-                    //$('.modal.in').removeClass('in');
-                    if(data.data=='0'){
-                      alert("Invalid Email !");
-                    }
-                    else{
-                      $("#myModal3").find(".modal-body").html(data.data);
-                      console.log(JSON.stringify(data.data));
-                    }
-
-
-
-                     },
-                     error: function (e) {
-                         console.log(e);
-
-                     }
-
-  });
-
+    var id=JSON.stringify($("#editStudentForm").serializeArray()[0].value);
+    id = id.replace("\"", "");
+    id = id.replace("\"", "");
+    var pid=JSON.stringify($("#editStudentForm").serializeArray()[1].value);
+    pid = pid.replace("\"", "");
+    pid = pid.replace("\"", "");
+    console.log(name+email+id);
+    $.ajax({
+      url:"/gum/public/student-rest/"+id,
+      type: 'PUT',
+      data: {
+        'id':id,
+        'name': name,
+        'email': email,
+        'classs': '',
+        'pid':pid,
+      },
+      success: function (data) {
+        if(data.data=='0'){
+          alert('Invalid Email !');
+        }
+        else {
+          $("#myModal3").find(".modal-body").html(data.data);
+          console.log((data));
+        }
+      },
+      error: function (e) {
+        console.log(e);
+      }
+    });
   });
 
 
+    //add button in show phtml for modal adding student
+    $(".addStudent").one("click",function(e){
+    e.preventDefault();
+    console.log("add student");
+    $('#myModal3').modal('show').find('.modal-body').load('/gum/public//add2/'+variableId);
 
+
+    //add button in add 2 form for adding student
+    $("body").on("click","#addStudentFormBtn",function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var name=JSON.stringify($("#addStudentFormId").serializeArray()[2].value);
+      name = name.replace("\"", "");
+      name = name.replace("\"", "");
+      var email=JSON.stringify($("#addStudentFormId").serializeArray()[4].value);
+      email = email.replace("\"", "");
+      email = email.replace("\"", "");
+      var pid=JSON.stringify($("#addStudentFormId").serializeArray()[1].value);
+      pid = pid.replace("\"", "");
+      pid = pid.replace("\"", "");
+      console.log(name);
+      console.log(JSON.stringify($("#addStudentFormId").serializeArray()));
+      $.ajax({
+        url:"/gum/public/student-rest",
+        type: 'POST',
+        data: {
+          'id':'',
+          'pid':pid,
+          'classs':'',
+          'name':name,
+          'email':email,
+        },
+        success: function (data) {
+          if(data.data=='0'){
+            alert("Invalid Email !");
+          }
+          else{
+            $("#myModal3").find(".modal-body").html(data.data);
+            console.log(JSON.stringify(data.data));
+          }
+        },
+        error: function (e) {
+          console.log(e);
+        }
+      });
+    });
   });
-  // $("body").on("click",".editStudent",function(e){
-  // e.preventDefault();
-  // console.log("edit student");
-  // $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
-  //
-  //
-  //
-  // });
-  //
-  // $("body").on("click",".deleteStudent",function(e){
-  //   e.preventDefault();
-  //   console.log("studentDelete");
-  //   $.ajax({
-  //         url: '/gum/public/student-rest/'+$(this).attr('value'),
-  //         // dataType: "jsonp",
-  //         type: 'DELETE',
-  //         success: function (data) {
-  //           console.log(JSON.stringify(data));
-  //           alert((JSON.stringify(data)));
-  //           $("#myModal3").removeClass('in');
-  //         //  myFunction();
-  //
-  //         },
-  //         error: function (xhr, status, error) {
-  //             console.log('Error: ' + error.message);
-  //         },
-  //     });
-  // });
 
 
-function myFunction2(studentPageValue){
-  // $(".studentTableContent").html('');
-  $.ajax({
-  url: '/gum/public/student-rest',
-  // dataType: "jsonp",
-  type: 'GET',
-  success: function (data) {
-    console.log(data);
-   data=JSON.stringify(data);
-   var obj=JSON.parse(data);
+  // Function for displaying students
+  function myFunction2(studentPageValue){
 
-  var totalStudentRecords=obj.data.length;
-  var totalStudentPages=Math.ceil(totalStudentRecords/5);
-  var first,last;
+    $.ajax({
+    url: '/gum/public/student-rest',
+    type: 'GET',
+    success: function (data) {
+      console.log(data);
+      data=JSON.stringify(data);
+      var obj=JSON.parse(data);
+      var totalStudentRecords=obj.data.length;
+      var totalStudentPages=Math.ceil(totalStudentRecords/5);
+      var first,last;
+      $(".paginationStudent").html('');
+      $(".studentTableContent").html('');
 
-  $(".paginationStudent").html('');
-   $(".studentTableContent").html('');
+      //loop-pagination for students
+      for(var j = 1 ; j <= totalStudentPages ; j++){
+        $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
+      }
+      if(studentPageValue==1){
+        first=0;
+        last=studentPageValue*5;
+      }
+      else if(studentPageValue==totalStudentPages){
+        first=(studentPageValue-1)*5;
+        last=totalStudentRecords;
+      }
+      else {
+        first=(studentPageValue-1)*5;
+        last=studentPageValue*5;
+      }
+      console.log('last:'+last);
 
-
-  for(var j = 1 ; j <= totalStudentPages ; j++){
-
-    $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
-
-  }
-  if(studentPageValue==1){
-  first=0;
-  last=studentPageValue*5;
-  }
-  else if(studentPageValue==totalStudentPages){
-  first=(studentPageValue-1)*5;
-  last=totalStudentRecords;
-  }
-  else {
-  first=(studentPageValue-1)*5;
-  last=studentPageValue*5;
-  }
-  console.log('last:'+last);
-   for(var i=first; i<last; i++){
-     if(obj.data[i].pid==variableId)
-     $(".studentTableContent").append("<tr><td>"+ obj.data[i].name +"</td><td>"+ obj.data[i].email +"</td><td><button class='btn btn-info btn-sm editStudent' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteStudent' value="+obj.data[i].id+">Delete</button></td></tr>");
-
-   }
+      //loop for displaying students
+      for(var i=first; i<last; i++){
+        if(obj.data[i].pid==variableId)
+        $(".studentTableContent").append("<tr><td>"+ obj.data[i].name +"</td><td>"+ obj.data[i].email +"</td><td><button class='btn btn-info btn-sm editStudent' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteStudent' value="+obj.data[i].id+">Delete</button></td></tr>");
+      }
       console.log("Data:"+((obj.data.length)));
       console.log("grtstuList");
 
+      //pagination
       $(".studentPageLink").on('click',function(e){
         e.preventDefault();
-
         studentPageValue=$(this).attr('value');
         console.log(studentPageValue);
-
-      myFunction2(studentPageValue);
-
-
+        myFunction2(studentPageValue);
       });
 
-
+      //edit student in show phtml
       $(".editStudent").one("click",function(e){
-      e.preventDefault();
-      console.log("edit student");
-      $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
-
-
-
+        e.preventDefault();
+        console.log("edit student");
+        $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
       });
 
+
+      //delete student in show phtml
       $(".deleteStudent").one("click",function(e){
         e.preventDefault();
         console.log("studentDelete");
         $.ajax({
-              url: '/gum/public/student-rest/'+$(this).attr('value'),
-              // dataType: "jsonp",
-              type: 'DELETE',
-              success: function (data) {
-                console.log(JSON.stringify(data));
-                $("#myModal3").find(".modal-body").html(data.data);
-
-              },
-              error: function (xhr, status, error) {
-                  console.log('Error: ' + error.message);
-              },
-          });
+          url: '/gum/public/student-rest/'+$(this).attr('value'),
+          type: 'DELETE',
+          success: function (data) {
+            console.log(JSON.stringify(data));
+            $("#myModal3").find(".modal-body").html(data.data);
+          },
+          error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+          },
+        });
       });
-
-
-  },
-  error: function (xhr, status, error) {
-      console.log('Error: ' + error.message);
-  },
+    },
+    error: function (xhr, status, error) {
+        console.log('Error: ' + error.message);
+    },
   });
-
-}
-//   $.ajax({
-//   url: '/gum/public/student-rest',
-//   // dataType: "jsonp",
-//   type: 'GET',
-//   success: function (data) {
-//     console.log(data);
-//    data=JSON.stringify(data);
-//    var obj=JSON.parse(data);
-//
-// var totalStudentRecords=obj.data.length;
-// var totalStudentPages=Math.ceil(totalStudentRecords/5);
-// var first=0,last;
-//
-// $(".paginationStudent").html('');
-//    $(".studentTableContent").html('');
-//
-//
-// for(var j = 1 ; j <= totalStudentPages ; j++){
-//
-//     $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
-//
-// }
-// if(totalStudentRecords>=5){
-//   last=5
-// }
-// else {
-//   last=totalStudentRecords;
-// }
-// console.log('last:'+last);
-//    for(var i=0; i<last; i++){
-//      if(obj.data[i].pid==variableId)
-//      $(".studentTableContent").append("<tr><td>"+ obj.data[i].name +"</td><td>"+ obj.data[i].email +"</td><td><button class='btn btn-info btn-sm editStudent' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteStudent' value="+obj.data[i].id+">Delete</button></td></tr>");
-//
-//    }
-//       console.log("Data:"+((obj.data.length)));
-//       console.log("grtstuList");
-//
-//       $(".editStudent").one("click",function(e){
-//       e.preventDefault();
-//       console.log("edit student");
-//       $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
-//
-//
-//
-//       });
-//
-//       $(".deleteStudent").one("click",function(e){
-//         e.preventDefault();
-//         console.log("studentDelete");
-//         $.ajax({
-//               url: '/gum/public/student-rest/'+$(this).attr('value'),
-//               // dataType: "jsonp",
-//               type: 'DELETE',
-//               success: function (data) {
-//                 console.log(JSON.stringify(data));
-//                 $("#myModal3").find(".modal-body").html(data.data);
-//
-//               },
-//               error: function (xhr, status, error) {
-//                   console.log('Error: ' + error.message);
-//               },
-//           });
-//       });
-//
-//
-//   },
-//   error: function (xhr, status, error) {
-//       console.log('Error: ' + error.message);
-//   },
-//   });
+  }
 
 });
 

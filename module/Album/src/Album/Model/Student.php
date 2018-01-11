@@ -1,7 +1,7 @@
 <?php
 namespace Album\Model;
 
- // Add these import statements
+// Add these import statements
  use Zend\InputFilter\InputFilter;
  use Zend\InputFilter\InputFilterAwareInterface;
  use Zend\InputFilter\InputFilterInterface;
@@ -20,9 +20,7 @@ namespace Album\Model;
          $this->name = (isset($data['name'])) ? $data['name'] : null;
          $this->classs = (isset($data['classs'])) ? $data['classs'] : null;
          $this->email = (isset($data['email'])) ? $data['email'] : null;
-        $this->pid = (isset($data['pid'])) ? $data['pid'] : null;
-
-
+         $this->pid = (isset($data['pid'])) ? $data['pid'] : null;
      }
      public function getArrayCopy()
      {
@@ -64,7 +62,7 @@ namespace Album\Model;
                      ),
                  ),
              ));
-                     $inputFilter->add(array(
+             $inputFilter->add(array(
                  'name'     => 'classs',
                  'required' => true,
                  'filters'  => array(
@@ -82,7 +80,7 @@ namespace Album\Model;
                      ),
                  ),
              ));
-                     $inputFilter->add(array(
+             $inputFilter->add(array(
                  'name'     => 'email',
                 'required' => true,
                  'filters'  => array(

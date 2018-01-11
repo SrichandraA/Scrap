@@ -1,27 +1,18 @@
-
- <h1>Classes List</h1>
-
+<h1>Classes List</h1>
 <p>
 <button type="button" value="/gum/public//add"  class="btn btn-info btn-lg addClass" >Add new Class</button>
 </p>
-<!-- <p>
-<button type="button"  class="btn btn-info btn-sm list" >Show</button>
-</p> -->
-
- <table class="table">
+<table class="table">
  <tr>
-     <th>Name</th>
-     <th>Edit</th>
-     <th>Delete</th>
-     <th>Show</th>
-
+   <th>Name</th>
+   <th>Edit</th>
+   <th>Delete</th>
+   <th>Show</th>
  </tr>
  <tbody class="tableContent"> </tbody>
-
 </table>
 <nav aria-label="...">
   <ul class="pagination">
-
   </ul>
 </nav>
 
@@ -30,226 +21,192 @@
 li:hover{
   cursor: pointer;
 }
+
 </style>
 
 <script>
 
-
-
 $(function(){
+  //Button in Edit class form phtml
   $("body").on("click","#editClassFormBtn",function(e){
     e.preventDefault();
     var name=JSON.stringify($("#editClassForm").serializeArray()[1].value);
     name = name.replace("\"", "");
     name = name.replace("\"", "");
-        var id=JSON.stringify($("#editClassForm").serializeArray()[0].value);
-        id = id.replace("\"", "");
-        id = id.replace("\"", "");
-  console.log(JSON.stringify($("#editClassForm").serializeArray()[1].value));
+    var id=JSON.stringify($("#editClassForm").serializeArray()[0].value);
+    id = id.replace("\"", "");
+    id = id.replace("\"", "");
+    console.log(JSON.stringify($("#editClassForm").serializeArray()[1].value));
     $.ajax({
-                     url:"/gum/public/album-rest/"+id,
-                     type: 'PUT',
+              url:"/gum/public/album-rest/"+id,
+              type: 'PUT',
+              data: {'name':name},
+              success: function (data) {
+                myFunction(1);
+                $("#myModal3").find(".modal-body").html(data.data);
+              },
+              error: function (e) {
+                console.log(e);
+              }
+            });
+    });
 
-                     data: {'name':name},
-                     success: function (data) {
-
-                        myFunction(1);
-                         $("#myModal3").find(".modal-body").html(data.data);
-
-                     },
-                     error: function (e) {
-
-                         console.log(e);
-
-                     }
-
-  });
-
-  });
-
-
+//Button in add class form phtml
   $("body").on("click","#addClassFormBtn",function(e){
     e.preventDefault();
     var name=JSON.stringify($("#form").serializeArray()[1].value);
     name = name.replace("\"", "");
     name = name.replace("\"", "");
-
-console.log(name);
-  console.log(JSON.stringify($("#form").serializeArray()[1].value));
-   $.ajax({
-                     url:"/gum/public/album-rest",
-                     type: 'POST',
-
-                     data: {'name':name},
-                     success: function (data) {
-                       console.log(JSON.stringify(data.data));
-                        $('#myModal3').find('.modal-body').html(data.data);
-                          myFunction(1);
-
-                     },
-                     error: function (e) {
-                         console.log(e);
-
-                     }
-
-  });
-
-  });
-
-
-
-
-        $("body").on("click",'.deleteClass',function(){
-
-          $.ajax({
-                url: '/gum/public/album-rest/'+$(this).attr('value'),
-                // dataType: "jsonp",
-                type: 'DELETE',
-                success: function (data) {
-                  console.log(JSON.stringify(data));
-                  //alert((JSON.stringify(data)));
-                  myFunction(1);
-                  $("#myModal3").modal('show').find(".modal-body").html(data.data);
-
-                },
-                error: function (xhr, status, error) {
-                    console.log('Error: ' + error.message);
-                },
-            });
-
-        });
-
-    myFunction(1);
-
-    $("body").on('click','.classPageLink',function(e){
-      e.preventDefault();
-      var pageValue=$(this).attr('value');
-      console.log($(this).attr('value'));
-      myFunction(pageValue);
-
-
+    console.log(name);
+    console.log(JSON.stringify($("#form").serializeArray()[1].value));
+    $.ajax({
+      url:"/gum/public/album-rest",
+      type: 'POST',
+      data: {'name':name},
+      success: function (data) {
+        console.log(JSON.stringify(data.data));
+        $('#myModal3').find('.modal-body').html(data.data);
+        myFunction(totalPages);
+      },
+      error: function (e) {
+        console.log(e);
+      }
     });
+  });
 
 
-        function myFunction(pageValue) {
+  //Delete Button for class in index phtml
+  $("body").on("click",'.deleteClass',function(){
+    $.ajax({
+      url: '/gum/public/album-rest/'+$(this).attr('value'),
+      type: 'DELETE',
+      success: function (data) {
+        console.log(JSON.stringify(data));
+        myFunction(1);
+        $("#myModal3").modal('show').find(".modal-body").html(data.data);
+      },
+      error: function (xhr, status, error) {
+        console.log('Error: ' + error.message);
+      },
+    });
+  });
 
-          $.ajax({
-          url: '/gum/public/album-rest',
-          // dataType: "jsonp",
-          type: 'GET',
-                 dataType: "json",
-          success: function (data) {
-           data=JSON.stringify(data);
-           var obj=JSON.parse(data);
-           $(".tableContent").html('');
-           var totalRecords=obj.data.length;
-           $(".pagination").html('');
-         var totalPages=Math.ceil(totalRecords/5);
-         for(var j = 1 ; j <= totalPages ; j ++){
-           if(j==pageValue){
-             $(".pagination").append("<li class='page-item active'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
+  //Function for displaying list of classes
+  myFunction(1);
 
-           }else{
-             $(".pagination").append("<li class='page-item'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
-           }
-         }
-           var first,last;
+  //Class pagination link
+  $("body").on('click','.classPageLink',function(e){
+    e.preventDefault();
+    var pageValue=$(this).attr('value');
+    console.log($(this).attr('value'));
+    myFunction(pageValue);
+  });
 
-              console.log("Data:"+((obj.data.length)));
-              console.log("grtList");
-          if(pageValue==1){
-            first=0;
-            last=pageValue*5;
-          }
-          else if(pageValue==Math.ceil(totalRecords/5)){
-            first=(pageValue-1)*5;
-            last=totalRecords;
-          }
-          else{
-            first=((pageValue-1)*5);
-            last=pageValue*5;
-          }
-            for(var k=first; k<(last); k++){
+  var totalPages;
 
-              $(".tableContent").append("<tr><td>"+ obj.data[k].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[k].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[k].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[k].id+">Show</button></td></tr>");
+  //function for calling all the students
+  function myFunction(pageValue) {
+    $.ajax({
+    url: '/gum/public/album-rest',
+    type: 'GET',
+    dataType: "json",
+    success: function (data) {
+      data=JSON.stringify(data);
+      var obj=JSON.parse(data);
+      $(".tableContent").html('');
+      var totalRecords=obj.data.length;
+      $(".pagination").html('');
+      totalPages=Math.ceil(totalRecords/5);
 
-            }
-
-          },
-          error: function (xhr, status, error) {
-              console.log('Error: ' + error.message);
-          },
-          });
-
-
-
-
+      //loop for pagination
+      for(var j = 1 ; j <= totalPages ; j ++){
+        if(j==pageValue){
+          $(".pagination").append("<li class='page-item active'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
         }
-
-
-        $("body").on("click",".editClass",function(){
-        console.log("show button");
-        if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
-          // $('#myModal3').find('.modal-body').html("");
-          $('.modal.in').removeClass("in");
-
-          $('#myModal3').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
-        }else{
-        $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
+        else{
+          $(".pagination").append("<li class='page-item'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
         }
+      }
+      var first,last;
+      console.log("Data:"+((obj.data.length)));
+      console.log("grtList");
+      if(pageValue==1){
+        first=0;
+        last=pageValue*5;
+      }
+      else if(pageValue==Math.ceil(totalRecords/5)){
+        first=(pageValue-1)*5;
+        last=totalRecords;
+      }
+      else{
+        first=((pageValue-1)*5);
+        last=pageValue*5;
+      }
+
+      //loop for class table contents
+      for(var k=first; k<(last); k++){
+        $(".tableContent").append("<tr><td>"+ obj.data[k].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[k].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[k].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[k].id+">Show</button></td></tr>");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log('Error: ' + error.message);
+    },
+  });
+}
+
+  //Button in index phtml for editing class
+  $("body").on("click",".editClass",function(){
+    console.log("show button");
+    if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+      $('.modal.in').removeClass("in");
+      $('#myModal3').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
+    }
+    else{
+      $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit/'+$(this).attr('value'));
+    }
+  });
 
 
-        });
-
-
-      $("body").on("click",".showClass",function(){
-      console.log("show button");
-      if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
-        // $('#myModal3').find('.modal-body').html("");
-        $('.modal.in').removeClass("in");
-
-        $('#myModal3').find('.modal-body').load('/gum/public//show/'+$(this).attr('value'));
-      }else{
+  //Button in index phtml for showing
+  //all the students of particular class
+  $("body").on("click",".showClass",function(){
+    console.log("show button");
+    if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+      $('.modal.in').removeClass("in");
+      $('#myModal3').find('.modal-body').load('/gum/public//show/'+$(this).attr('value'));
+    }
+    else{
       $('#myModal3').modal('show').find('.modal-body').load('/gum/public//show/'+$(this).attr('value'));
-      }
+    }
+  });
 
 
-      });
+  //Button for adding class in index phtml
+  $(".addClass").on("click",function(e){
+    e.preventDefault();
+    console.log("add class");
+    if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
+      $('.modal.in').removeClass("in");
+      $('#myModal3').find('.modal-body').load($(this).attr('value'));
+    }
+    else{
+      $('#myModal3').modal('show').find('.modal-body').load($(this).attr('value'));
+    }
+  });
 
-
-      $(".addClass").on("click",function(e){
-
-      e.preventDefault();
-      console.log("add class");
-      if($("#myModal3").data('bs.modal') && $("#myModal3").data('bs.modal').isShown){
-        $('.modal.in').removeClass("in");
-
-        $('#myModal3').find('.modal-body').load($(this).attr('value'));
-      }else{
-        $('#myModal3').modal('show').find('.modal-body').load($(this).attr('value'));
-
-      }
-
-
-      });
-
-
+//end of script function
 });
 
 </script>
 
 <div id="myModal3" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
-    <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Modal Header</h4>
       </div>
       <div class="modal-body">
-
-
       </div>
       <div class="modal-footer">
         <button id="closeModal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>

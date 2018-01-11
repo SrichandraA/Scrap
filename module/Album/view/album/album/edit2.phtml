@@ -8,23 +8,13 @@
 
  <?php
  $form = $this->form;
- // $form->setAttribute('action', $this->url(
- //     'album',
- //     array(
- //         'action' => 'edit2',
- //         'id'     => $this->id,
- //     )
- // ));
  $form->setAttribute('id','editStudentForm');
  $form->prepare();
-
  echo $this->form()->openTag($form);
  echo $this->formHidden($form->get('id'));
  echo $this->formHidden($form->get('pid'));
  echo $this->formHidden($form->get('classs'));
-
  echo $this->formRow($form->get('name'));
-
 ?>
 <br>
 <?php
@@ -34,6 +24,4 @@
 <?php
 ?>
 <button type="button" id="editStudentFormBtn" class="btn btn-info btn-sm" >Edit </button><?php
-
- // echo $this->formSubmit($form->get('submit'));
- echo $this->form()->closeTag();
+  echo $this->form()->closeTag();

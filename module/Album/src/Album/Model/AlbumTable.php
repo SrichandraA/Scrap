@@ -1,12 +1,11 @@
 <?php
 namespace Album\Model;
 
- use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\TableGateway\TableGateway;
  use Zend\Paginator\Adapter\DbSelect;
  use Zend\Paginator\Paginator;
  use Zend\Db\Sql\Select;
  use Zend\Db\ResultSet\ResultSet;
-
 
  class AlbumTable
  {
@@ -17,26 +16,9 @@ namespace Album\Model;
          $this->tableGateway = $tableGateway;
      }
 
-     public function fetchAll($paginated=false)
+     public function fetchAll()
      {
-        if ($paginated) {
-             // create a new Select object for the table album
-             $select = new Select('class');
-             // create a new result set based on the Album entity
-             $resultSetPrototype = new ResultSet();
-             $resultSetPrototype->setArrayObjectPrototype(new Album());
-             // create a new pagination adapter object
-             $paginatorAdapter = new DbSelect(
-                 // our configured select object
-                 $select,
-                 // the adapter to run it against
-                 $this->tableGateway->getAdapter(),
-                 // the result set to hydrate
-                 $resultSetPrototype
-             );
-             $paginator = new Paginator($paginatorAdapter);
-             return $paginator;
-         }
+        
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
@@ -57,9 +39,9 @@ namespace Album\Model;
          $row = $rowset->current();
          if (!$row) {
              return true;
+         } else {
+             return false;
          }
-         else
-         return false;
      }
      public function getStudents($id)
      {
@@ -81,12 +63,10 @@ namespace Album\Model;
          $id = (int) $album->id;
          if ($id == 0) {
              $this->tableGateway->insert($data);
-         } 
-         else {
+         } else {
              if ($this->getAlbum($id)) {
                  $this->tableGateway->update($data, array('id' => $id));
-             } 
-             else {
+             } else {
                  throw new \Exception('Album id does not exist');
              }
          }

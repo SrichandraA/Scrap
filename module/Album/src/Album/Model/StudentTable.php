@@ -21,44 +21,10 @@ class StudentTable extends AbstractTableGateway
     }
     public function fetchAll()
     {
-
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }
-    public function getStudents($id)
-    {
-                     //$resultSet = $this->tableGateway->select(array('classs' => 'class1'));
-                    /*  $sql = new Sql( $this->tableGateway->getAdapter());
-                    $select = $sql->select();
-                    $select->from('students');
-                    $select->where(array('classs' => $id));
-                    $statement = $sql->prepareStatementForSqlObject($select);
-                    $results = $statement->execute();*/
-                    // create a new Select object for the table album
-                    //  $select2 = new Select('students');
-        $sql = new Sql( $this->tableGateway->getAdapter());
-        $select = $sql->select();
-        $select->from('students');
-        $select->where(array('pid' => $id));
-             // create a new result set based on the Album entity
-        $resultSetPrototype = new ResultSet();
-        $resultSetPrototype->setArrayObjectPrototype(new Student());
-             // create a new pagination adapter object
-        $paginatorAdapter = new DbSelect(
-                 // our configured select object
-            $select,
-                 // the adapter to run it against
-            $this->tableGateway->getAdapter(),
-                 // the result set to hydrate
-            $resultSetPrototype
-        );
-        $paginator = new Paginator($paginatorAdapter);
-        return $paginator;
-
-         //return $results;
-
-     }
-
+    
      public function saveStudent(Student $student)
      {
          $data = array(
