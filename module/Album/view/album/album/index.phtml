@@ -19,9 +19,23 @@
  <tbody class="tableContent"> </tbody>
 
 </table>
+<nav aria-label="...">
+  <ul class="pagination">
 
+  </ul>
+</nav>
+
+<style>
+
+li:hover{
+  cursor: pointer;
+}
+</style>
 
 <script>
+
+
+
 $(function(){
   $("body").on("click","#editClassFormBtn",function(e){
     e.preventDefault();
@@ -38,20 +52,8 @@ $(function(){
 
                      data: {'name':name},
                      success: function (data) {
-                    //   $('#myModal3').modal('show')
-                    //   $('.modal.in').removeClass('in');
 
-                    //    console.log(JSON.stringify(data.data));
-                      //  if(JSON.stringify(data.data)=="0"){
-                          //alert("class exists");
-                        // }
-                        // else {
-                        //
-                        //   myFunction();
-                        //
-                        // }
-                        myFunction();
-                       // $('.modal.in').removeClass('in');
+                        myFunction(1);
                          $("#myModal3").find(".modal-body").html(data.data);
 
                      },
@@ -80,15 +82,9 @@ console.log(name);
 
                      data: {'name':name},
                      success: function (data) {
-                    //   $('#myModal3').modal('show')
-                  //  $('.modal.in').removeClass('in');
-
-                        console.log(JSON.stringify(data.data));
+                       console.log(JSON.stringify(data.data));
                         $('#myModal3').find('.modal-body').html(data.data);
-                          //alert("class exists");
-                          myFunction();
-
-
+                          myFunction(1);
 
                      },
                      error: function (e) {
@@ -112,7 +108,7 @@ console.log(name);
                 success: function (data) {
                   console.log(JSON.stringify(data));
                   //alert((JSON.stringify(data)));
-                  myFunction();
+                  myFunction(1);
                   $("#myModal3").modal('show').find(".modal-body").html(data.data);
 
                 },
@@ -122,34 +118,21 @@ console.log(name);
             });
 
         });
-      //  $(".list").click(function(){
-        $.ajax({
-        url: '/gum/public/album-rest',
-        // dataType: "jsonp",
-        type: 'GET',
-               dataType: "json",
-        success: function (data) {
-         data=JSON.stringify(data);
-         var obj=JSON.parse(data);
-         $(".tableContent").html('');
-         for(var i=0; i<obj.data.length; i++){
 
-           $(".tableContent").append("<tr><td>"+ obj.data[i].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[i].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[i].id+">Show</button></td></tr>");
+    myFunction(1);
 
-         }
-            console.log("Data:"+((obj.data.length)));
-            console.log("grtList");
+    $("body").on('click','.classPageLink',function(e){
+      e.preventDefault();
+      var pageValue=$(this).attr('value');
+      console.log($(this).attr('value'));
+      myFunction(pageValue);
 
 
-        },
-        error: function (xhr, status, error) {
-            console.log('Error: ' + error.message);
-        },
-        });
-    //    });
+    });
 
 
-        function myFunction() {
+        function myFunction(pageValue) {
+
           $.ajax({
           url: '/gum/public/album-rest',
           // dataType: "jsonp",
@@ -159,17 +142,45 @@ console.log(name);
            data=JSON.stringify(data);
            var obj=JSON.parse(data);
            $(".tableContent").html('');
-           for(var i=0; i<obj.data.length; i++){
+           var totalRecords=obj.data.length;
+           $(".pagination").html('');
+         var totalPages=Math.ceil(totalRecords/5);
+         for(var j = 1 ; j <= totalPages ; j ++){
+           if(j==pageValue){
+             $(".pagination").append("<li class='page-item active'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
 
-             $(".tableContent").append("<tr><td>"+ obj.data[i].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm deleteClass' value="+obj.data[i].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[i].id+">Show</button></td></tr>");
-
+           }else{
+             $(".pagination").append("<li class='page-item'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
            }
+         }
+           var first,last;
+
               console.log("Data:"+((obj.data.length)));
+              console.log("grtList");
+          if(pageValue==1){
+            first=0;
+            last=pageValue*5;
+          }
+          else if(pageValue==Math.ceil(totalRecords/5)){
+            first=(pageValue-1)*5;
+            last=totalRecords;
+          }
+          else{
+            first=((pageValue-1)*5);
+            last=pageValue*5;
+          }
+            for(var k=first; k<(last); k++){
+
+              $(".tableContent").append("<tr><td>"+ obj.data[k].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[k].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[k].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[k].id+">Show</button></td></tr>");
+
+            }
+
           },
           error: function (xhr, status, error) {
               console.log('Error: ' + error.message);
           },
           });
+
 
 
 
