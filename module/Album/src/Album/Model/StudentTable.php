@@ -24,7 +24,7 @@ class StudentTable extends AbstractTableGateway
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }
-    
+
      public function saveStudent(Student $student)
      {
          $data = array(
@@ -72,11 +72,16 @@ class StudentTable extends AbstractTableGateway
          $rowset = $this->tableGateway->select(array('id' => $id));
          $row = $rowset->current();
          if (!$row) {
-             throw new \Exception("Could not find row $id");
+             return '0';
          }
          return $row;
      }
-
+     public function getStudentByPid($id)
+     {
+         $id  = (int) $id;
+         $resultSet = $this->tableGateway->select(array('pid' => $id));
+         return $resultSet;
+     }
      public function deleteStudent($id)
      {
          $this->tableGateway->delete(array('id' => (int) $id));

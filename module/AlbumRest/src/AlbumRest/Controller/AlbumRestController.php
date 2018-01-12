@@ -37,8 +37,11 @@ class AlbumRestController extends AbstractRestfulController
     public function get($id)
     {
         $album = $this->getAlbumTable()->getAlbum($id);
-
-        return new JsonModel(array("data" => $album));
+        if($album!=0)
+          return new JsonModel(array("data" => $album));
+        else {
+          return $this->redirect()->toRoute('album', array('action' => 'error', 'page' => 'No_Class_Found'));
+        }
     }
 
     public function create($data)
@@ -59,6 +62,7 @@ class AlbumRestController extends AbstractRestfulController
 
     public function update($id, $data)
     {
+
         $data['id'] = $id;
         $album = $this->getAlbumTable()->getAlbum($id);
         $form  = new AlbumForm();
@@ -77,6 +81,7 @@ class AlbumRestController extends AbstractRestfulController
         return new JsonModel(array(
       'data' => 'Updated Successfully !',
     ));
+
     }
 
     public function delete($id)

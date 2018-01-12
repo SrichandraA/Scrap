@@ -51,6 +51,14 @@ class AlbumController extends AbstractRestfulController
           ));
     }
 
+    public function errorAction()
+    {
+        $id = $this->params()->fromRoute('page');
+        return new ViewModel(array(
+            'id' => $id,
+          ));
+    }
+
     public function addAction()
     {
         $form = new AlbumForm();

@@ -18,7 +18,7 @@ use Zend\Db\TableGateway\TableGateway;
 
      public function fetchAll()
      {
-        
+
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
@@ -29,7 +29,8 @@ use Zend\Db\TableGateway\TableGateway;
          $rowset = $this->tableGateway->select(array('id' => $id));
          $row = $rowset->current();
          if (!$row) {
-             throw new \Exception("Could not find row $id");
+             //throw new \Exception("Could not find row $id");
+             return 0;
          }
          return $row;
      }
@@ -42,16 +43,6 @@ use Zend\Db\TableGateway\TableGateway;
          } else {
              return false;
          }
-     }
-     public function getStudents($id)
-     {
-         $id  = (int) $id;
-         $rowset = $this->tableGateway->select(array('id' => $id));
-         $row = $rowset->current();
-         if (!$row) {
-             throw new \Exception("Could not find row $id");
-         }
-         return $row;
      }
 
      public function saveAlbum(Album $album)

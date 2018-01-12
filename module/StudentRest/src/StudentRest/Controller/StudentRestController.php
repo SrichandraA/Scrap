@@ -22,6 +22,7 @@ class StudentRestController extends AbstractRestfulController
     public function getList()
     {
         $results = $this->getStudentTable()->fetchAll();
+        //print_r($_GET['a']);
         $data = array();
         foreach ($results as $result) {
             $data[] = $result;
@@ -31,8 +32,16 @@ class StudentRestController extends AbstractRestfulController
 
     public function get($id)
     {
-        $student = $this->getStudentTable()->getStudent($id);
-        return array("data" => $student);
+        $student = $this->getStudentTable()->getStudentByPid($id);
+        if($student=='0')
+        return $this->redirect()->toRoute('album', array('action' => 'error', 'page' => 'No_Student_Found'));
+        else {
+          $data = array();
+          foreach ($student as $result) {
+              $data[] = $result;
+          }
+          return new JsonModel(array('data' => $data));
+        }
     }
 
     public function create($data)

@@ -15,6 +15,28 @@
   <ul class="paginationStudent">
   </ul>
 </nav>
+<style>
+.paginationStudent {
+    display: inline-block;
+}
+.paginationStudent a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.paginationStudent a.active {
+    background-color: #2AABD2;
+    color: white;
+    border-radius: 5px;
+}
+
+.paginationStudent a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+</style>
 
 <script>
 
@@ -123,7 +145,7 @@ $(function(){
   function myFunction2(studentPageValue){
 
     $.ajax({
-    url: '/gum/public/student-rest',
+    url: '/gum/public/student-rest/'+variableId,
     type: 'GET',
     success: function (data) {
       console.log(data);
@@ -137,7 +159,12 @@ $(function(){
 
       //loop-pagination for students
       for(var j = 1 ; j <= totalStudentPages ; j++){
-        $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
+        if(j==studentPageValue)
+          $(".paginationStudent").append("<li class='page-item'><a class='page-link active studentPageLink' value="+j+">"+j+"</a></li>")
+        else {
+          $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
+
+        }
       }
       if(studentPageValue==1){
         first=0;
