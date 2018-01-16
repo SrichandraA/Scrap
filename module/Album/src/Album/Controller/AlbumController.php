@@ -10,6 +10,10 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend\View\Model\ViewModel;
 use Album\Model\Album;
 use Album\Model\Student;
+use Album\Model\User;
+use Album\Form\UserForm;
+use Album\Form\UserTable;
+
 use Album\Form\AlbumForm;
 use Album\Form\StudentForm;
 
@@ -17,6 +21,7 @@ class AlbumController extends AbstractRestfulController
 {
     protected $albumTable;
     protected $studentTable;
+    protected $userTable;
     public function onBootstrap($e)
     {
         $app = $e->getApplication();
@@ -28,6 +33,32 @@ class AlbumController extends AbstractRestfulController
     public function indexAction()
     {
         return new ViewModel();
+    }
+    public function loginAction()
+    {
+      $form = new UserForm();
+      $request = $this->getRequest();
+
+
+       if ($request->isPost()) {
+        // print_r($_POST['username']);
+
+      // $user = new User();
+      // $form->setInputFilter($user->getInputFilter());
+      // $form->setData($_POST);
+      // if($form->isValid())
+      // $user->exchangeArray($form->getData());
+  //  $username='username';
+     //print_r('hi:'+$this->params()->fromPost('username'));
+    // print_r($this->getUserTable()->getUserByUsername($_POST['username']));
+   if ( ($this->getUserTable()->getUserByUsername($_POST['username'])) && ($this->getUserTable()->getUserByPassword($_POST['password']))){
+
+        return new JsonModel(array('data'=>1));
+
+      }
+
+  }
+      return array('form' => $form);
     }
 
     public function createAction()
@@ -156,5 +187,13 @@ class AlbumController extends AbstractRestfulController
             $this->studentTable = $sm->get('Album\Model\StudentTable');
         }
         return $this->studentTable;
+    }
+    public function getUserTable()
+    {
+        if (!$this->userTable) {
+            $sm = $this->getServiceLocator();
+            $this->userTable = $sm->get('Album\Model\UserTable');
+        }
+        return $this->userTable;
     }
 }

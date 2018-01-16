@@ -34,6 +34,8 @@ li{
 
 $(function(){
   //Button in Edit class form phtml
+  console.log($.cookie('loggedin'));
+
   $("body").on("click","#editClassFormBtn",function(e){
     e.preventDefault();
     var name=JSON.stringify($("#editClassForm").serializeArray()[1].value);
@@ -96,9 +98,22 @@ $(function(){
       },
     });
   });
+  $(".logout").click(function(){
+  window.location= "/gum/public//login";
+  });
+
 
   //Function for displaying list of classes
-  myFunction(1);
+  if($.cookie('loggedin')=='true'){
+    $('.logout').removeClass('visible');
+    myFunction(1);
+
+  }
+  else{
+    alert('login to continue');
+    window.location = "/gum/public//login";
+
+  }
 
   //Class pagination link
   $("body").on('click','.classPageLink',function(e){

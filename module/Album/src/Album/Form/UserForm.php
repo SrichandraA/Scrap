@@ -3,7 +3,7 @@ namespace Album\Form;
 
  use Zend\Form\Form;
 
- class AlbumForm extends Form
+ class UserForm extends Form
  {
      public function __construct($name = null)
      {
@@ -15,13 +15,19 @@ namespace Album\Form;
              'type' => 'Hidden',
          ));
          $this->add(array(
-             'name' => 'name',
+             'name' => 'username',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Name',
+                 'label' => 'Username',
              ),
          ));
-
+         $this->add(array(
+             'name' => 'password',
+             'type' => 'Text',
+             'options' => array(
+                 'label' => 'Password',
+             ),
+         ));
          $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
