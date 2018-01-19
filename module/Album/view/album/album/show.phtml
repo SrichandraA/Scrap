@@ -46,7 +46,7 @@ $(function(){
     console.log(variableId);
 
     //Function for displaying the list of students
-    myFunction2(1);
+    myFunction2(0);
 
     //Edit button in Edit 2 form for editing student
     $("body").on("click","#editStudentFormBtn",function(e){
@@ -140,6 +140,38 @@ $(function(){
     });
   });
 
+  //pagination
+  $("body").on('click','.studentPageLink',function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    studentPageValue=$(this).attr('value');
+    console.log(studentPageValue);
+    myFunction2(studentPageValue);
+  });
+  //edit student in show phtml
+  $("body").on("click",'.editStudent',function(e){
+    e.stopImmediatePropagation();
+    console.log("edit student");
+    $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
+  });
+  //delete student in show phtml
+  $("body").on("click",'.deleteStudent',function(e){
+    e.stopImmediatePropagation();
+    console.log("studentDelete");
+    $.ajax({
+      url: '/gum/public/student-rest/'+$(this).attr('value'),
+      type: 'DELETE',
+      success: function (data) {
+        console.log(JSON.stringify(data));
+        $("#myModal3").find(".modal-body").html(data.data);
+      },
+      error: function (xhr, status, error) {
+        console.log('Error: ' + error.message);
+      },
+    });
+  });
+var obj;
+var totalStudentRecords;
 
   // Function for displaying students
   function myFunction2(studentPageValue){
@@ -147,79 +179,41 @@ $(function(){
     $.ajax({
     url: '/gum/public/student-rest/'+variableId,
     type: 'GET',
+    data: {
+      'page': studentPageValue*5,
+      'limit': 5
+    },
     success: function (data) {
-      console.log(data);
-      data=JSON.stringify(data);
-      var obj=JSON.parse(data);
-      var totalStudentRecords=obj.data.length;
+      //for getting all the students of a particular paginator
+      dataStudent=JSON.stringify(data.data[0]);
+      console.log(data.data[0].length);
+      obj=JSON.parse(dataStudent);//got all students in array
+
+      //for total number of students of particular class
+      totalStudentRecords=JSON.stringify(data.data[1]);
+      totalStudentRecords=JSON.parse(totalStudentRecords);
+      totalStudentRecords=totalStudentRecords[0].num;//got them as integer
+      console.log(totalStudentRecords);
       var totalStudentPages=Math.ceil(totalStudentRecords/5);
-      var first,last;
       $(".paginationStudent").html('');
       $(".studentTableContent").html('');
 
       //loop-pagination for students
       for(var j = 1 ; j <= totalStudentPages ; j++){
-        if(j==studentPageValue)
-          $(".paginationStudent").append("<li class='page-item'><a class='page-link active studentPageLink' value="+j+">"+j+"</a></li>")
+        if((j-1)==studentPageValue)
+          $(".paginationStudent").append("<li class='page-item'><a class='page-link active studentPageLink' value="+(j-1)+">"+j+"</a></li>")
         else {
-          $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+j+">"+j+"</a></li>")
+          $(".paginationStudent").append("<li class='page-item'><a class='page-link studentPageLink' value="+(j-1)+">"+j+"</a></li>")
 
         }
       }
-      if(studentPageValue==1){
-        first=0;
-        last=studentPageValue*5;
-      }
-      else if(studentPageValue==totalStudentPages){
-        first=(studentPageValue-1)*5;
-        last=totalStudentRecords;
-      }
-      else {
-        first=(studentPageValue-1)*5;
-        last=studentPageValue*5;
-      }
-      console.log('last:'+last);
 
       //loop for displaying students
-      for(var i=first; i<last; i++){
-        if(obj.data[i].pid==variableId)
-        $(".studentTableContent").append("<tr><td>"+ obj.data[i].name +"</td><td>"+ obj.data[i].email +"</td><td><button class='btn btn-info btn-sm editStudent' value="+obj.data[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteStudent' value="+obj.data[i].id+">Delete</button></td></tr>");
+      for(var i=0; i<data.data[0].length; i++){
+        $(".studentTableContent").append("<tr><td>"+ obj[i].name +"</td><td>"+ obj[i].email +"</td><td><button class='btn btn-info btn-sm editStudent' value="+obj[i].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteStudent' value="+obj[i].id+">Delete</button></td></tr>");
       }
-      console.log("Data:"+((obj.data.length)));
       console.log("grtstuList");
 
-      //pagination
-      $(".studentPageLink").on('click',function(e){
-        e.preventDefault();
-        studentPageValue=$(this).attr('value');
-        console.log(studentPageValue);
-        myFunction2(studentPageValue);
-      });
-
-      //edit student in show phtml
-      $(".editStudent").one("click",function(e){
-        e.preventDefault();
-        console.log("edit student");
-        $('#myModal3').modal('show').find('.modal-body').load('/gum/public//edit2/'+$(this).attr('value'));
-      });
-
-
-      //delete student in show phtml
-      $(".deleteStudent").one("click",function(e){
-        e.preventDefault();
-        console.log("studentDelete");
-        $.ajax({
-          url: '/gum/public/student-rest/'+$(this).attr('value'),
-          type: 'DELETE',
-          success: function (data) {
-            console.log(JSON.stringify(data));
-            $("#myModal3").find(".modal-body").html(data.data);
-          },
-          error: function (xhr, status, error) {
-            console.log('Error: ' + error.message);
-          },
-        });
-      });
     },
     error: function (xhr, status, error) {
         console.log('Error: ' + error.message);

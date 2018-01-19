@@ -32,33 +32,12 @@ class AlbumController extends AbstractRestfulController
 
     public function indexAction()
     {
-        return new ViewModel();
-    }
-    public function loginAction()
-    {
-      $form = new UserForm();
-      $request = $this->getRequest();
-
-
-       if ($request->isPost()) {
-        // print_r($_POST['username']);
-
-      // $user = new User();
-      // $form->setInputFilter($user->getInputFilter());
-      // $form->setData($_POST);
-      // if($form->isValid())
-      // $user->exchangeArray($form->getData());
-  //  $username='username';
-     //print_r('hi:'+$this->params()->fromPost('username'));
-    // print_r($this->getUserTable()->getUserByUsername($_POST['username']));
-   if ( ($this->getUserTable()->getUserByUsername($_POST['username'])) && ($this->getUserTable()->getUserByPassword($_POST['password']))){
-
-        return new JsonModel(array('data'=>1));
-
+      if (! $this->getServiceLocator()
+               ->get('AuthService')->hasIdentity()){
+          return $this->redirect()->toRoute('login');
       }
 
-  }
-      return array('form' => $form);
+        return new ViewModel();
     }
 
     public function createAction()

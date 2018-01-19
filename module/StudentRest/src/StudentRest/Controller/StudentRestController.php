@@ -32,15 +32,15 @@ class StudentRestController extends AbstractRestfulController
 
     public function get($id)
     {
-        $student = $this->getStudentTable()->getStudentByPid($id);
+      $page=$this->params()->fromQuery('page');
+
+        $student = $this->getStudentTable()->getStudentByPid($id,$page);
+
         if($student=='0')
         return $this->redirect()->toRoute('album', array('action' => 'error', 'page' => 'No_Student_Found'));
         else {
-          $data = array();
-          foreach ($student as $result) {
-              $data[] = $result;
-          }
-          return new JsonModel(array('data' => $data));
+
+          return new JsonModel(array('data' => $student));
         }
     }
 

@@ -26,11 +26,15 @@ class AlbumRestController extends AbstractRestfulController
     }
     public function getList()
     {
-        $results = $this->getAlbumTable()->fetchAll();
-        $data = array();
-        foreach ($results as $result) {
-            $data[] = $result;
-        }
+
+      $page = $this->params()->fromQuery('page');
+
+    //  $limit=$this->params()->fromQuery('limit');
+
+        $data = $this->getAlbumTable()->fetchAll($page);
+        // print_r($results);
+        // exit;
+
 
         return new JsonModel(array('data' => $data));
     }

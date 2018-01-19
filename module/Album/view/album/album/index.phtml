@@ -1,5 +1,7 @@
 <h1>Classes List</h1>
 <p>
+  <a class="btn btn-lg pull-right logoutButton" href="<?php echo $this->url('login/process', array('action'=>'logout')); ?>">Logout</a>
+
 <button type="button" value="/gum/public//add"  class="btn btn-info btn-lg addClass" >Add new Class</button>
 </p>
 <table class="table">
@@ -34,7 +36,6 @@ li{
 
 $(function(){
   //Button in Edit class form phtml
-  console.log($.cookie('loggedin'));
 
   $("body").on("click","#editClassFormBtn",function(e){
     e.preventDefault();
@@ -98,22 +99,13 @@ $(function(){
       },
     });
   });
-  $(".logout").click(function(){
-  window.location= "/gum/public//login";
-  });
 
 
   //Function for displaying list of classes
-  if($.cookie('loggedin')=='true'){
-    $('.logout').removeClass('visible');
-    myFunction(1);
 
-  }
-  else{
-    alert('login to continue');
-    window.location = "/gum/public//login";
+    myFunction(0);
 
-  }
+
 
   //Class pagination link
   $("body").on('click','.classPageLink',function(e){
@@ -124,53 +116,52 @@ $(function(){
   });
 
   var totalPages;
+  var dataClass;
+
 
   //function for calling all the students
   function myFunction(pageValue) {
     $.ajax({
     url: '/gum/public/album-rest',
     type: 'GET',
+    data: {
+      'page': pageValue*5,
+      'limit': 5
+    },
     dataType: "json",
     success: function (data) {
-      data=JSON.stringify(data);
-      var obj=JSON.parse(data);
+      dataClass=JSON.stringify(data.data[0]);
+      console.log(dataClass);
+      var obj=JSON.parse(dataClass);
       $(".tableContent").html('');
-      var totalRecords=obj.data.length;
+      //var totalRecords=obj.data.length;
+      //console.log("totalclasses:"totalRecords);
+      var totalRecords=JSON.stringify(data.data[1]);
+      totalRecords=JSON.parse(totalRecords);
+      totalRecords=totalRecords[0].num;
+      console.log(totalRecords);
       $(".pagination").html('');
       totalPages=Math.ceil(totalRecords/5);
-
+      console.log(totalPages);
       //loop for pagination
       for(var j = 1 ; j <= totalPages ; j ++){
-        if(j==pageValue){
-          $(".pagination").append("<li class='page-item active'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
+        if((j-1)==pageValue){
+          $(".pagination").append("<li class='page-item active'><a class='page-link classPageLink' value="+(j-1)+">"+j+"</a></li>");
         }
         else{
-          $(".pagination").append("<li class='page-item'><a class='page-link classPageLink' value="+j+">"+j+"</a></li>");
+          $(".pagination").append("<li class='page-item'><a class='page-link classPageLink' value="+(j-1)+">"+j+"</a></li>");
         }
       }
-      var first,last;
-      console.log("Data:"+((obj.data.length)));
+
       console.log("grtList");
-      if(pageValue==1){
-        first=0;
-        last=pageValue*5;
-      }
-      else if(pageValue==Math.ceil(totalRecords/5)){
-        first=(pageValue-1)*5;
-        last=totalRecords;
-      }
-      else{
-        first=((pageValue-1)*5);
-        last=pageValue*5;
-      }
 
       //loop for class table contents
-      for(var k=first; k<(last); k++){
-        $(".tableContent").append("<tr><td>"+ obj.data[k].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj.data[k].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj.data[k].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj.data[k].id+">Show</button></td></tr>");
+      for(var k=0; k<(data.data[0].length); k++){
+        $(".tableContent").append("<tr><td>"+ obj[k].name +"</td><td><button class='btn btn-info btn-sm editClass' value="+obj[k].id+">Edit</button></td><td><button class='btn btn-info btn-sm btn-danger deleteClass' value="+obj[k].id+">Delete</button></td><td><button class='btn btn-info btn-sm showClass' value="+obj[k].id+">Show</button></td></tr>");
       }
     },
     error: function (xhr, status, error) {
-      console.log('Error: ' + error.message);
+      console.log('Error: ' + error);
     },
   });
 }
